@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: registry.astralinux.ru/library/astra/ubi18-rabbitmq310:1.8.4
+    container_name: vhagar-rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vhagar-network
+
+  producer:
+    build:
+      context: ..
+      dockerfile: build/producer.Dockerfile
+    container_name: vhagar-producer
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672/
+    networks:
+      - vhagar-network
+    restart: unless-stopped
+
+  consumer:
+    build:
+      context: ..
+      dockerfile: build/consumer.Dockerfile
+    container_name: vhagar-consumer
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672/
+    networks:
+      - vhagar-network
+    restart: unless-stopped
+
+volumes:
+  rabbitmq_data:
+    driver: local
+
+networks:
+  vhagar-network:
+    driver: bridge
+

@@ -1,0 +1,59 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Development containers
+.devcontainer
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+bin/
+dist/
+
+# Go cache and temporary files
+vendor/
+*.mod.sum
+go.sum.bak
+.gocache/
+
+# Test files
+*_test.go
+test/
+tests/
+
+# Scripts and configs (not needed for build)
+scripts/
+configs/
+db/
+api/
+
+# Docker files (not needed in build context)
+deployments/
+build/*.Dockerfile
+
+# Other
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.local
+

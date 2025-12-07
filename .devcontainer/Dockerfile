@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     golang-gopkg-yaml.v3-dev \
     golang-github-streadway-amqp-dev \
+    golang-github-kelseyhightower-envconfig-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz -o /tmp/docker.tgz \
@@ -62,13 +63,21 @@ RUN git clone https://github.com/ohmyzsh/ohmyzsh.git /home/$USERNAME/.oh-my-zsh 
     && echo "0123456789abcdef0123456789abcdef" > /etc/machine-id \
     && chmod 644 /etc/machine-id
 
-ENV GOPATH=/home/$USERNAME/go
-ENV PATH=$PATH:/home/$USERNAME/go/bin
-
-USER $USERNAME
+ENV GOPATH=/tmp/go-tools
+ENV PATH=$PATH:/tmp/go-tools/bin
 
 RUN mkdir -p $GOPATH/bin \
     && go install -v golang.org/x/tools/gopls@latest \
-    && go install -v github.com/go-delve/delve/cmd/dlv@latest
+    && go install -v github.com/go-delve/delve/cmd/dlv@v1.21.2 \
+    && mv $GOPATH/bin/* /usr/local/bin/ \
+    && rm -rf $GOPATH \
+    && chmod +x /usr/local/bin/gopls /usr/local/bin/dlv
+
+ENV GOPATH=/usr/share/gocode
+ENV PATH=$PATH:/usr/local/bin
+
+USER $USERNAME
+
+RUN rm -rf /home/$USERNAME/go/pkg 2>/dev/null || true
 
 WORKDIR /home/$USERNAME

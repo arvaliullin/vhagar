@@ -10,11 +10,9 @@ import (
 )
 
 func main() {
-	// Подключение к RabbitMQ серверу
-	// По умолчанию: amqp://guest:guest@localhost:5672/
 	amqpURL := os.Getenv("AMQP_URL")
 	if amqpURL == "" {
-		amqpURL = "amqp://guest:guest@localhost:5672/"
+		amqpURL = "amqp://guest:guest@127.0.0.1:5672/"
 	}
 	conn, err := amqp.Dial(amqpURL)
 	if err != nil {
@@ -22,25 +20,19 @@ func main() {
 	}
 	defer conn.Close()
 
-	// Открытие канала
 	ch, err := conn.Channel()
 	if err != nil {
 		log.Fatalf("Не удалось открыть канал: %v", err)
 	}
 	defer ch.Close()
 
-	// Объявление очереди
-	// durable=true - очередь будет сохраняться после перезапуска сервера
-	// autoDelete=false - очередь не будет удаляться автоматически
-	// exclusive=false - очередь доступна для всех соединений
-	// noWait=false - ждем подтверждения от сервера
 	q, err := ch.QueueDeclare(
-		"example_queue", // имя очереди
-		true,            // durable - устойчивая
-		false,           // autoDelete - не удаляется автоматически
-		false,           // exclusive - не эксклюзивная
-		false,           // noWait - ждем подтверждения
-		nil,             // arguments - дополнительные аргументы
+		"example_queue",
+		true,
+		false,
+		false,
+		false,
+		nil,
 	)
 	if err != nil {
 		log.Fatalf("Не удалось объявить очередь: %v", err)
@@ -48,17 +40,16 @@ func main() {
 
 	log.Printf("Очередь '%s' объявлена. Готов к отправке сообщений...", q.Name)
 
-	// Отправка нескольких сообщений
 	for i := 1; i <= 10; i++ {
 		body := fmt.Sprintf("Сообщение номер %d", i)
 
 		err = ch.Publish(
-			"",     // exchange - используем default exchange
-			q.Name, // routing key - имя очереди
-			false,  // mandatory - не обязательное
-			false,  // immediate - не немедленное
+			"",
+			q.Name,
+			false,
+			false,
 			amqp.Publishing{
-				DeliveryMode: amqp.Persistent, // Persistent - сообщение будет сохранено на диск
+				DeliveryMode: amqp.Persistent,
 				ContentType:  "text/plain",
 				Body:         []byte(body),
 				Timestamp:    time.Now(),
@@ -68,9 +59,8 @@ func main() {
 		}
 
 		log.Printf(" [x] Отправлено: %s", body)
-		time.Sleep(500 * time.Millisecond) // Небольшая задержка между сообщениями
+		time.Sleep(500 * time.Millisecond)
 	}
 
 	log.Println("Все сообщения отправлены!")
 }
-

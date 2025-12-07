@@ -8,6 +8,20 @@
         "GOPATH": "/usr/share/gocode",
         "DOCKER_HOST": "unix:///var/run/docker.sock"
     },
+    "forwardPorts": [
+        5672,
+        15672
+    ],
+    "portsAttributes": {
+        "5672": {
+            "label": "RabbitMQ AMQP",
+            "onAutoForward": "notify"
+        },
+        "15672": {
+            "label": "RabbitMQ Management UI",
+            "onAutoForward": "notify"
+        }
+    },
     "mounts": [
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
         "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",

@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "debug-amqp-consumer",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/examples/amqp/consumer",
+            "env": {
+                "AMQP_URL": "amqp://guest:guest@host.docker.internal:5672/"
+            },
+            "console": "integratedTerminal",
+            "showLog": true
+        },
+        {
+            "name": "debug-amqp-producer",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/examples/amqp/producer",
+            "env": {
+                "AMQP_URL": "amqp://guest:guest@host.docker.internal:5672/"
+            },
+            "console": "integratedTerminal",
+            "showLog": true
+        }
+    ]
+}
+

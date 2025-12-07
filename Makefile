@@ -1,4 +1,4 @@
-.PHONY: run amqp-producer amqp-consumer up down ps logs
+.PHONY: run amqp-producer amqp-consumer database up down ps logs
 
 run:
 	- go run github.com/arvaliullin/vhagar/cmd/app
@@ -8,6 +8,9 @@ amqp-producer:
 
 amqp-consumer:
 	go run github.com/arvaliullin/vhagar/examples/amqp/consumer
+
+database:
+	go run github.com/arvaliullin/vhagar/examples/database
 
 up:
 	docker compose -f deployments/docker-compose.yaml up --build -d

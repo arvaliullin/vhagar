@@ -24,6 +24,18 @@
             },
             "console": "integratedTerminal",
             "showLog": true
+        },
+        {
+            "name": "debug-database",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/examples/database",
+            "env": {
+                "DATABASE_URL": "postgres://postgres:postgres@host.docker.internal:5432/postgres?sslmode=disable"
+            },
+            "console": "integratedTerminal",
+            "showLog": true
         }
     ]
 }

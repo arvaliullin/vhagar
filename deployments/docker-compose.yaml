@@ -49,8 +49,30 @@ services:
       - vhagar-network
     restart: unless-stopped
 
+  postgresql11:
+    image: registry.astralinux.ru/library/astra/ubi17-postgresql11:1.7.8
+    container_name: vhagar-postgresql11
+    hostname: postgresql11
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgresql11_data:/var/lib/pgsql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vhagar-network
+
 volumes:
   rabbitmq_data:
+    driver: local
+  postgresql11_data:
     driver: local
 
 networks:

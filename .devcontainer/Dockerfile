@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     golang \
     ca-certificates \
     sudo \
+    openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y --no-install-recommends \

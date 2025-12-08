@@ -6,7 +6,8 @@
     "containerEnv": {
         "GOTOOLCHAIN": "auto",
         "GOPATH": "/usr/share/gocode",
-        "DOCKER_HOST": "unix:///var/run/docker.sock"
+        "DOCKER_HOST": "unix:///var/run/docker.sock",
+        "GIT_EDITOR": "vim"
     },
     "forwardPorts": [
         5672,

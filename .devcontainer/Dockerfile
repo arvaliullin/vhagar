@@ -73,19 +73,22 @@ RUN git clone https://github.com/ohmyzsh/ohmyzsh.git /home/$USERNAME/.oh-my-zsh 
 
 ENV GOPATH=/tmp/go-tools
 ENV PATH=$PATH:/tmp/go-tools/bin
+ENV GOMODCACHE=/tmp/go-tools-modcache
 
 RUN mkdir -p $GOPATH/bin \
     && go install -v golang.org/x/tools/gopls@latest \
     && go install -v github.com/go-delve/delve/cmd/dlv@v1.21.2 \
     && mv $GOPATH/bin/* /usr/local/bin/ \
-    && rm -rf $GOPATH \
+    && rm -rf $GOPATH $GOMODCACHE \
     && chmod +x /usr/local/bin/gopls /usr/local/bin/dlv
 
 ENV GOPATH=/usr/share/gocode
 ENV PATH=$PATH:/usr/local/bin
+ENV GOMODCACHE=
 
 USER $USERNAME
 
-RUN rm -rf /home/$USERNAME/go/pkg 2>/dev/null || true
+RUN rm -rf /home/$USERNAME/go/pkg 2>/dev/null || true \
+    && rm -rf /root/go/pkg 2>/dev/null || true
 
 WORKDIR /home/$USERNAME

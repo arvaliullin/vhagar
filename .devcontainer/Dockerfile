@@ -25,6 +25,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     golang-github-streadway-amqp-dev \
     golang-github-kelseyhightower-envconfig-dev \
     golang-github-lib-pq-dev \
+    golang-github-golang-mock-dev \
+    golang-golang-x-mod-dev \
+    golang-golang-x-tools-dev \
+    golang-golang-x-tools \
+    mockgen \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz -o /tmp/docker.tgz \

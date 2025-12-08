@@ -31,3 +31,15 @@ prune: down
 	- docker volume prune -f
 	- docker network prune -f
 	- docker system prune -a --volumes -f
+
+.PHONY: generate-mocks
+generate-mocks:
+	go generate ./...
+
+.PHONY: fmt
+fmt:
+	- go fmt ./...
+
+.PHONY: test
+test:
+	- go test ./...

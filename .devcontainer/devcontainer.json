@@ -28,6 +28,7 @@
         "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
         "source=${localWorkspaceFolder}/.devcontainer/.zshrc,target=/home/vscode/.zshrc,type=bind,consistency=cached"
     ],
+    "postCreateCommand": "git config --global user.name 'void-dev' && git config --global user.email 'void-dev@void.dev'",
     "customizations": {
         "vscode": {
             "extensions": [

@@ -24,9 +24,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     golang-gopkg-yaml.v3-dev \
     golang-github-streadway-amqp-dev \
-    golang-github-kelseyhightower-envconfig-dev \
     golang-github-lib-pq-dev \
     golang-github-golang-mock-dev \
+    golang-github-go-chi-chi-dev \
     golang-golang-x-mod-dev \
     golang-golang-x-tools-dev \
     golang-golang-x-tools \

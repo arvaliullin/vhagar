@@ -49,6 +49,25 @@ services:
       - vhagar-network
     restart: unless-stopped
 
+  http:
+    build:
+      context: ..
+      dockerfile: build/http.Dockerfile
+    container_name: vhagar-http
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - vhagar-network
+    restart: unless-stopped
+
   postgresql11:
     image: registry.astralinux.ru/library/astra/ubi17-postgresql11:1.7.8
     container_name: vhagar-postgresql11

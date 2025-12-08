@@ -1,18 +1,18 @@
 .PHONY: run
 run:
-	- go run github.com/arvaliullin/vhagar/cmd/app
+	- CGO_ENABLED=0 GOOS=linux GOPROXY=off go run -mod=readonly github.com/arvaliullin/vhagar/cmd/app
 
 .PHONY: amqp-producer
 amqp-producer:
-	go run github.com/arvaliullin/vhagar/examples/amqp/producer
+	CGO_ENABLED=0 GOOS=linux GOPROXY=off go run -mod=readonly github.com/arvaliullin/vhagar/examples/amqp/producer
 
 .PHONY: amqp-consumer
 amqp-consumer:
-	go run github.com/arvaliullin/vhagar/examples/amqp/consumer
+	CGO_ENABLED=0 GOOS=linux GOPROXY=off go run -mod=readonly github.com/arvaliullin/vhagar/examples/amqp/consumer
 
 .PHONY: database
 database:
-	go run github.com/arvaliullin/vhagar/examples/database
+	CGO_ENABLED=0 GOOS=linux GOPROXY=off go run -mod=readonly github.com/arvaliullin/vhagar/examples/database
 
 .PHONY: up
 up:

@@ -8,10 +8,9 @@ ENV GOPATH=/usr/share/gocode
 
 WORKDIR /app
 
-COPY go.mod go.sum* ./
-COPY examples/amqp/consumer/ ./examples/amqp/consumer/
+COPY . ./
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/consumer ./examples/amqp/consumer
+RUN CGO_ENABLED=0 GOOS=linux GOPROXY=off go build -mod=readonly -o /app/consumer github.com/arvaliullin/vhagar/examples/amqp/consumer
 
 FROM registry.astralinux.ru/library/astra/ubi18:1.8.4
 

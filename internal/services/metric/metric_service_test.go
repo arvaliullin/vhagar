@@ -227,4 +227,3 @@ func TestService_HealthCheck(t *testing.T) {
 		t.Errorf("HealthCheck() error = %v", err)
 	}
 }
-

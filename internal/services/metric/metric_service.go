@@ -63,4 +63,3 @@ func (s *Service) DeleteMetric(ctx context.Context, id string) error {
 func (s *Service) HealthCheck(ctx context.Context) error {
 	return s.storage.Ping(ctx)
 }
-

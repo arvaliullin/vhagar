@@ -6,4 +6,3 @@ type Metric struct {
 	Value float64
 	Type  string
 }
-

@@ -24,7 +24,7 @@ func connectDB(ctx context.Context, connStr string) (*sql.DB, error) {
 	}
 
 	if err := db.PingContext(ctx); err != nil {
-		db.Close()
+		_ = db.Close()
 		return nil, fmt.Errorf("ошибка проверки соединения: %w", err)
 	}
 

@@ -77,13 +77,6 @@ linters-settings:
     local-prefixes: github.com/arvaliullin/vhagar
   mnd:
     checks: ["all"]
-    ignored-numbers:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 500
-      - 8080
     ignored-functions: ["strconv.ParseInt", "strconv.ParseFloat", "strconv.ParseUint", "strconv.ParseBool"]
   dupl:
     threshold: 100

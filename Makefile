@@ -12,6 +12,7 @@ amqp-consumer:
 
 .PHONY: database
 database:
+	DATABASE_URL="postgres://postgres:postgres@host.docker.internal:5432/postgres?sslmode=disable" \
 	CGO_ENABLED=0 GOOS=linux GOPROXY=off go run -mod=readonly github.com/arvaliullin/vhagar/examples/database
 
 .PHONY: up

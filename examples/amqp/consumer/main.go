@@ -1,3 +1,4 @@
+// Package main содержит пример потребителя сообщений из очереди RabbitMQ.
 package main
 
 import (

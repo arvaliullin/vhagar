@@ -1,3 +1,4 @@
+// Package main содержит точку входа основного приложения vhagar.
 package main
 
 import (
@@ -5,6 +6,10 @@ import (
 	"log"
 
 	"gopkg.in/yaml.v3"
+)
+
+const (
+	defaultPort = 8080
 )
 
 type Config struct {
@@ -17,7 +22,7 @@ func main() {
 	config := Config{
 		Name:    "vhagar",
 		Version: "1.0.0",
-		Port:    8080,
+		Port:    defaultPort,
 	}
 
 	data, err := yaml.Marshal(&config)

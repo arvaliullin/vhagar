@@ -1,3 +1,4 @@
+// Package main содержит пример производителя сообщений в очередь RabbitMQ.
 package main
 
 import (
@@ -7,6 +8,10 @@ import (
 	"time"
 
 	"github.com/streadway/amqp"
+)
+
+const (
+	messageDelay = 500 * time.Millisecond
 )
 
 func main() {
@@ -59,7 +64,7 @@ func main() {
 		}
 
 		log.Printf(" [x] Отправлено: %s", body)
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(messageDelay)
 	}
 
 	log.Println("Все сообщения отправлены!")

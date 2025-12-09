@@ -1,0 +1,122 @@
+version: 2
+
+run:
+  timeout: 5m
+  tests: true
+  skip-dirs:
+    - vendor
+    - bin
+    - .git
+  skip-files:
+    - ".*\\.pb\\.go$"
+    - ".*\\.gen\\.go$"
+
+output:
+  formats:
+    text:
+      path: stdout
+      print-issued-lines: true
+      print-linter-name: true
+
+linters:
+  enable-all: false
+  disable:
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - gocyclo
+    - varnamelen
+    - wrapcheck
+    - errcheck
+    - gocritic
+    - funlen
+  enable:
+    - bodyclose
+    - staticcheck
+    - dogsled
+    - dupl
+    - errname
+    - errorlint
+    - exhaustive
+    - copyloopvar
+    - goconst
+    - godot
+    - godox
+    - err113
+    - goheader
+    - mnd
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - modernize
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - noctx
+    - nolintlint
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+
+linters-settings:
+  lll:
+    line-length: 120
+  govet:
+    check-shadowing: true
+    enable-all: true
+  gosec:
+    severity: medium
+    confidence: medium
+  gci:
+    local-prefixes: github.com/arvaliullin/vhagar
+  mnd:
+    checks: ["all"]
+    ignored-numbers:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 500
+      - 8080
+    ignored-functions: ["strconv.ParseInt", "strconv.ParseFloat", "strconv.ParseUint", "strconv.ParseBool"]
+  dupl:
+    threshold: 100
+  whitespace:
+    multi-if: true
+    multi-func: true
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  new: false
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+        - mnd
+        - lll
+        - revive
+    - path: examples/
+      linters:
+        - noctx
+        - revive
+        - gosec
+        - unused
+        - mnd
+    - path: cmd/
+      linters:
+        - revive
+        - mnd
+    - path: internal/
+      text: "package-comments"
+      linters:
+        - revive
+    - text: "unused-parameter"
+      linters:
+        - revive

@@ -1,3 +1,4 @@
+// Package repository определяет интерфейсы для слоя персистентности данных.
 package repository
 
 import (
@@ -7,6 +8,8 @@ import (
 )
 
 //go:generate mockgen -source=storage.go -destination=mock/storage_mock.go -package=repomock
+
+// MetricStorage определяет интерфейс для операций сохранения метрик.
 type MetricStorage interface {
 	Ping(ctx context.Context) error
 	Save(ctx context.Context, metric *domain.Metric) error

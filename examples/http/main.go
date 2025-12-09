@@ -1,12 +1,23 @@
+// Package main содержит пример HTTP-сервера с использованием библиотеки chi.
 package main
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/go-chi/chi"
+)
+
+const (
+	defaultPort        = "8080"
+	readHeaderTimeout  = 5 * time.Second
+	readTimeout        = 10 * time.Second
+	writeTimeout       = 10 * time.Second
+	idleTimeout        = 120 * time.Second
 )
 
 type Config struct {
@@ -22,20 +33,29 @@ func main() {
 		Port: os.Getenv("PORT"),
 	}
 	if cfg.Port == "" {
-		cfg.Port = "8080"
+		cfg.Port = defaultPort
 	}
 
 	r := chi.NewRouter()
 
 	r.Get("/health", healthHandler)
 
+	srv := &http.Server{
+		Addr:              ":" + cfg.Port,
+		Handler:           r,
+		ReadHeaderTimeout: readHeaderTimeout,
+		ReadTimeout:       readTimeout,
+		WriteTimeout:     writeTimeout,
+		IdleTimeout:       idleTimeout,
+	}
+
 	log.Printf("Сервер запущен на порту %s", cfg.Port)
-	if err := http.ListenAndServe(":"+cfg.Port, r); err != nil {
+	if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		log.Fatalf("Ошибка запуска сервера: %v", err)
 	}
 }
 
-func healthHandler(w http.ResponseWriter, r *http.Request) {
+func healthHandler(w http.ResponseWriter, _ *http.Request) {
 	response := HealthResponse{
 		Status: "ok",
 	}

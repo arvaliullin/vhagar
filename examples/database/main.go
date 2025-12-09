@@ -1,6 +1,8 @@
+// Package main содержит пример работы с базой данных PostgreSQL.
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -10,14 +12,19 @@ import (
 	_ "github.com/lib/pq"
 )
 
+const (
+	dbTimeout = 5 * time.Second
+)
+
 // connectDB устанавливает соединение с базой данных PostgreSQL.
-func connectDB(connStr string) (*sql.DB, error) {
+func connectDB(ctx context.Context, connStr string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка открытия соединения: %w", err)
 	}
 
-	if err := db.Ping(); err != nil {
+	if err := db.PingContext(ctx); err != nil {
+		db.Close()
 		return nil, fmt.Errorf("ошибка проверки соединения: %w", err)
 	}
 
@@ -25,7 +32,7 @@ func connectDB(connStr string) (*sql.DB, error) {
 }
 
 // createTable создает таблицу для примера, если она не существует.
-func createTable(db *sql.DB) error {
+func createTable(ctx context.Context, db *sql.DB) error {
 	query := `
 		CREATE TABLE IF NOT EXISTS users (
 			id SERIAL PRIMARY KEY,
@@ -34,15 +41,15 @@ func createTable(db *sql.DB) error {
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 		)
 	`
-	_, err := db.Exec(query)
+	_, err := db.ExecContext(ctx, query)
 	return err
 }
 
 // insertUser вставляет нового пользователя в базу данных.
-func insertUser(db *sql.DB, name, email string) (int, error) {
+func insertUser(ctx context.Context, db *sql.DB, name, email string) (int, error) {
 	query := `INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id`
 	var id int
-	err := db.QueryRow(query, name, email).Scan(&id)
+	err := db.QueryRowContext(ctx, query, name, email).Scan(&id)
 	if err != nil {
 		return 0, fmt.Errorf("ошибка вставки пользователя: %w", err)
 	}
@@ -50,8 +57,8 @@ func insertUser(db *sql.DB, name, email string) (int, error) {
 }
 
 // getAllUsers получает всех пользователей из базы данных.
-func getAllUsers(db *sql.DB) error {
-	rows, err := db.Query("SELECT id, name, email, created_at FROM users ORDER BY id")
+func getAllUsers(ctx context.Context, db *sql.DB) error {
+	rows, err := db.QueryContext(ctx, "SELECT id, name, email, created_at FROM users ORDER BY id")
 	if err != nil {
 		return fmt.Errorf("ошибка выполнения запроса: %w", err)
 	}
@@ -80,7 +87,9 @@ func main() {
 		connStr = "postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable"
 	}
 
-	db, err := connectDB(connStr)
+	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+	db, err := connectDB(ctx, connStr)
+	cancel()
 	if err != nil {
 		log.Fatalf("Не удалось подключиться к базе данных: %v", err)
 	}
@@ -88,7 +97,10 @@ func main() {
 
 	log.Println("Успешно подключено к базе данных PostgreSQL")
 
-	if err := createTable(db); err != nil {
+	ctx, cancel = context.WithTimeout(context.Background(), dbTimeout)
+	err = createTable(ctx, db)
+	cancel()
+	if err != nil {
 		log.Fatalf("Не удалось создать таблицу: %v", err)
 	}
 	log.Println("Таблица 'users' готова к использованию")
@@ -103,7 +115,9 @@ func main() {
 	}
 
 	for _, u := range users {
-		id, err := insertUser(db, u.name, u.email)
+		ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+		id, err := insertUser(ctx, db, u.name, u.email)
+		cancel()
 		if err != nil {
 			log.Printf("Ошибка при вставке пользователя %s: %v", u.name, err)
 			continue
@@ -111,7 +125,10 @@ func main() {
 		log.Printf("Добавлен пользователь: ID=%d, Имя=%s, Email=%s", id, u.name, u.email)
 	}
 
-	if err := getAllUsers(db); err != nil {
+	ctx, cancel = context.WithTimeout(context.Background(), dbTimeout)
+	err = getAllUsers(ctx, db)
+	cancel()
+	if err != nil {
 		log.Fatalf("Ошибка при получении пользователей: %v", err)
 	}
 

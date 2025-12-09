@@ -82,6 +82,9 @@ RUN mkdir -p $GOPATH/bin \
     && rm -rf $GOPATH $GOMODCACHE \
     && chmod +x /usr/local/bin/gopls /usr/local/bin/dlv
 
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin latest \
+    && chmod +x /usr/local/bin/golangci-lint
+
 ENV GOPATH=/usr/share/gocode
 ENV PATH=$PATH:/usr/local/bin
 ENV GOMODCACHE=

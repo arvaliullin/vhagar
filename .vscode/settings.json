@@ -1,4 +1,5 @@
 {
     "git.user.name": "void-dev",
-    "git.user.email": "void-dev@void.dev"
+    "git.user.email": "void-dev@void.dev",
+    "makefile.configureOnOpen": false
 }

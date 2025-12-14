@@ -36,7 +36,15 @@
             },
             "console": "integratedTerminal",
             "showLog": true
+        },
+        {
+            "name": "debug-app",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/app",
+            "console": "integratedTerminal",
+            "showLog": true
         }
     ]
 }
-

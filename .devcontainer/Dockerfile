@@ -78,9 +78,13 @@ ENV GOMODCACHE=/tmp/go-tools-modcache
 RUN mkdir -p $GOPATH/bin \
     && go install -v golang.org/x/tools/gopls@latest \
     && go install -v github.com/go-delve/delve/cmd/dlv@v1.21.2 \
+    && go install -v github.com/cweill/gotests/gotests@v1.6.0 \
+    && go install -v github.com/josharian/impl@v1.4.0 \
+    && go install -v github.com/haya14busa/goplay/cmd/goplay@v1.0.0 \
+    && go install -v honnef.co/go/tools/cmd/staticcheck@latest \
     && mv $GOPATH/bin/* /usr/local/bin/ \
     && rm -rf $GOPATH $GOMODCACHE \
-    && chmod +x /usr/local/bin/gopls /usr/local/bin/dlv
+    && chmod +x /usr/local/bin/gopls /usr/local/bin/dlv /usr/local/bin/gotests /usr/local/bin/impl /usr/local/bin/goplay /usr/local/bin/staticcheck
 
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin latest \
     && chmod +x /usr/local/bin/golangci-lint
